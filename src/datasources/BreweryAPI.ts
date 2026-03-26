@@ -1,4 +1,4 @@
-import { Brewery } from "../types/brewery";
+import { Brewery, BreweryFilterArgs } from "../types/brewery";
 
 export class BreweryAPI {
   private baseURL: string;
@@ -7,12 +7,18 @@ export class BreweryAPI {
     this.baseURL = baseURL;
   }
 
-  async getBreweries(
-    page: number = 1,
-    perPage: number = 20,
-  ): Promise<Brewery[]> {
+  async getBreweries(args: BreweryFilterArgs): Promise<Brewery[]> {
     try {
-      const url = `${this.baseURL}/breweries?page=${page}&per_page=${perPage}`;
+      const params = new URLSearchParams();
+
+      if (args.page) params.append("page", args.page.toString());
+      if (args.perPage) params.append("per_page", args.perPage.toString());
+      if (args.city) params.append("by_city", args.city);
+      if (args.state) params.append("by_state", args.state);
+      if (args.type) params.append("by_type", args.type);
+      if (args.query) params.append("query", args.query);
+
+      const url = `${this.baseURL}/breweries${args.query ? "/search" : ""}?${params.toString()}`;
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -21,7 +27,6 @@ export class BreweryAPI {
 
       return (await response.json()) as Brewery[];
     } catch (error) {
-      console.error("Error fetching breweries:", error);
       throw new Error("Failed to fetch breweries from API");
     }
   }
@@ -41,78 +46,7 @@ export class BreweryAPI {
 
       return (await response.json()) as Brewery;
     } catch (error) {
-      console.error(`Error fetching brewery ${id}:`, error);
       throw new Error("Failed to fetch brewery from API");
-    }
-  }
-
-  async searchBreweries(query: string): Promise<Brewery[]> {
-    try {
-      const url = `${this.baseURL}/breweries/search?query=${encodeURIComponent(query)}`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`Failed to search breweries: ${response.statusText}`);
-      }
-
-      return (await response.json()) as Brewery[];
-    } catch (error) {
-      console.error("Error searching breweries:", error);
-      throw new Error("Failed to search breweries from API");
-    }
-  }
-
-  async getBreweriesByCity(city: string): Promise<Brewery[]> {
-    try {
-      const url = `${this.baseURL}/breweries?by_city=${encodeURIComponent(city)}`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch breweries by city: ${response.statusText}`,
-        );
-      }
-
-      return (await response.json()) as Brewery[];
-    } catch (error) {
-      console.error(`Error fetching breweries by city ${city}:`, error);
-      throw new Error("Failed to fetch breweries by city from API");
-    }
-  }
-
-  async getBreweriesByState(state: string): Promise<Brewery[]> {
-    try {
-      const url = `${this.baseURL}/breweries?by_state=${encodeURIComponent(state)}`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch breweries by state: ${response.statusText}`,
-        );
-      }
-
-      return (await response.json()) as Brewery[];
-    } catch (error) {
-      console.error(`Error fetching breweries by state ${state}:`, error);
-      throw new Error("Failed to fetch breweries by state from API");
-    }
-  }
-
-  async getBreweriesByType(type: string): Promise<Brewery[]> {
-    try {
-      const url = `${this.baseURL}/breweries?by_type=${encodeURIComponent(type)}`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch breweries by type: ${response.statusText}`,
-        );
-      }
-
-      return (await response.json()) as Brewery[];
-    } catch (error) {
-      console.error(`Error fetching breweries by type ${type}:`, error);
-      throw new Error("Failed to fetch breweries by type from API");
     }
   }
 }

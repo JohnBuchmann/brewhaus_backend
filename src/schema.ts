@@ -21,11 +21,14 @@ export const typeDefs = gql`
   }
 
   type Query {
-    breweries(page: Int, perPage: Int): [Brewery!]!
+    breweries(
+      page: Int
+      perPage: Int
+      city: String
+      state: String
+      type: String
+      query: String
+    ): [Brewery!]!
     brewery(id: ID!): Brewery
-    searchBreweries(query: String!): [Brewery!]!
-    breweriesByCity(city: String!): [Brewery!]!
-    breweriesByState(state: String!): [Brewery!]!
-    breweriesByType(type: String!): [Brewery!]!
   }
 `;

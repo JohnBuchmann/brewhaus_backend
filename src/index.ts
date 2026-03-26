@@ -21,9 +21,7 @@ async function startServer() {
     listen: { port: PORT },
     context: async () => {
       return {
-        dataSources: {
-          breweryAPI: new BreweryAPI(BREWERY_API_BASE_URL),
-        },
+        breweryAPI: new BreweryAPI(BREWERY_API_BASE_URL),
       };
     },
   });

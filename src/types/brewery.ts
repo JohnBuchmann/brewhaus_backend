@@ -17,27 +17,11 @@ export interface Brewery {
   street: string | null;
 }
 
-export interface BreweriesQueryArgs {
+export interface BreweryFilterArgs {
   page?: number;
   perPage?: number;
-}
-
-export interface BreweryByIdArgs {
-  id: string;
-}
-
-export interface SearchBreweriesArgs {
-  query: string;
-}
-
-export interface BreweriesByCityArgs {
-  city: string;
-}
-
-export interface BreweriesByStateArgs {
-  state: string;
-}
-
-export interface BreweriesByTypeArgs {
-  type: string;
+  city?: string;
+  state?: string;
+  type?: string;
+  query?: string;
 }
