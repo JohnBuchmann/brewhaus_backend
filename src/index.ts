@@ -18,7 +18,7 @@ async function startServer() {
   });
 
   const { url } = await startStandaloneServer(server, {
-    listen: { port: PORT },
+    listen: { port: PORT, host: "0.0.0.0" },
     context: async () => {
       return {
         breweryAPI: new BreweryAPI(BREWERY_API_BASE_URL),
@@ -27,7 +27,6 @@ async function startServer() {
   });
 
   console.log(`🚀 GraphQL server ready at ${url}`);
-  console.log(`📊 Using Brewery API: ${BREWERY_API_BASE_URL}`);
 }
 
 startServer().catch((error) => {
